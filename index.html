@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Thomas & Marie — 14 Juin 2026</title>
+  <title>Thomas & Céline — 14 Juin 2026</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@300;400&display=swap" rel="stylesheet" />
   <style>
@@ -401,11 +401,40 @@
       margin-bottom: .8rem;
     }
 
+    /* ── PHOTOS ── */
+    #photos { background: var(--dark); padding: 5rem 2rem; }
+    #photos .section-tag { color: var(--gold); }
+    #photos h2 { color: var(--cream); }
+    .photos-grid {
+      max-width: 900px;
+      margin: 3rem auto 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 420px 280px;
+      gap: .8rem;
+    }
+    .photo-item { overflow: hidden; border-radius: 3px; }
+    .photo-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: sepia(20%) saturate(85%) brightness(.95);
+      transition: filter .4s, transform .4s;
+    }
+    .photo-item:hover img {
+      filter: sepia(5%) saturate(100%) brightness(1);
+      transform: scale(1.03);
+    }
+    .photo-landscape { grid-column: span 2; }
+
     /* ── RESPONSIVE ── */
     @media (max-width: 600px) {
       .story-cols { grid-template-columns: 1fr; }
       .form-row { grid-template-columns: 1fr; }
       nav { gap: 1.2rem; font-size: .7rem; }
+      .photos-grid { grid-template-columns: 1fr; grid-template-rows: 300px 300px 220px; }
+      .photo-landscape { grid-column: span 1; }
     }
   </style>
 </head>
@@ -414,6 +443,7 @@
   <!-- NAV -->
   <nav>
     <a href="#story">Notre histoire</a>
+    <a href="#photos">Photos</a>
     <a href="#programme">Programme</a>
     <a href="#lieu">Lieu</a>
     <a href="#rsvp">RSVP</a>
@@ -423,7 +453,7 @@
   <!-- HERO -->
   <section id="hero">
     <p class="hero-tag">Vous êtes invités au mariage de</p>
-    <h1>Thomas<span class="ampersand">&amp;</span><em>Marie</em></h1>
+    <h1>Thomas<span class="ampersand">&amp;</span><em>Céline</em></h1>
     <p class="hero-date">Dimanche 14 Juin 2026</p>
     <div class="divider"></div>
     <p class="hero-location">Château de Fontainebleau, Île-de-France</p>
@@ -455,12 +485,31 @@
       <div class="story-cols">
         <div class="story-col">
           <h3>Thomas</h3>
-          <p>Passionné de randonnées et de bonne cuisine, Thomas apporte sa joie de vivre et son sens de l'humour à chaque moment partagé. Il a su conquérir le cœur de Marie en deux mots.</p>
+          <p>Passionné de randonnées et de bonne cuisine, Thomas apporte sa joie de vivre et son sens de l'humour à chaque moment partagé. Il a su conquérir le cœur de Céline en deux mots.</p>
         </div>
         <div class="story-col">
-          <h3>Marie</h3>
-          <p>Éprise de voyages et d'art, Marie illumine chaque pièce où elle entre. C'est son sourire qui a tout changé ce fameux soir, et Thomas ne s'en est toujours pas remis.</p>
+          <h3>Céline</h3>
+          <p>Éprise de voyages et d'art, Céline illumine chaque pièce où elle entre. C'est son sourire qui a tout changé ce fameux soir, et Thomas ne s'en est toujours pas remis.</p>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PHOTOS -->
+  <section id="photos">
+    <div class="section-inner">
+      <p class="section-tag">Thomas &amp; Céline</p>
+      <h2>Nos moments ensemble</h2>
+    </div>
+    <div class="photos-grid">
+      <div class="photo-item">
+        <img src="https://picsum.photos/seed/thomas2026/600/840" alt="Thomas" loading="lazy" />
+      </div>
+      <div class="photo-item">
+        <img src="https://picsum.photos/seed/celine2026/600/840" alt="Céline" loading="lazy" />
+      </div>
+      <div class="photo-item photo-landscape">
+        <img src="https://picsum.photos/seed/mariage2026/1200/560" alt="Thomas et Céline" loading="lazy" />
       </div>
     </div>
   </section>
@@ -560,6 +609,9 @@
         <div class="form-success" id="form-success">
           Merci ! Votre réponse a bien été reçue. On a hâte de vous retrouver !
         </div>
+        <div class="form-error" id="form-error" style="display:none;margin-top:1rem;padding:1rem;background:rgba(220,50,50,.12);border:1px solid rgba(220,50,50,.3);border-radius:3px;color:#e88;font-size:.85rem;text-align:center;">
+          Une erreur s'est produite. Veuillez réessayer ou nous contacter directement.
+        </div>
       </form>
     </div>
   </section>
@@ -606,7 +658,7 @@
 
   <!-- FOOTER -->
   <footer>
-    <div class="names">Thomas &amp; Marie</div>
+    <div class="names">Thomas &amp; Céline</div>
     <p>14 Juin 2026 · Fontainebleau</p>
   </footer>
 
@@ -632,11 +684,33 @@
     updateCountdown();
     setInterval(updateCountdown, 1000);
 
-    // RSVP form (no backend — just shows success message)
-    document.getElementById('rsvp-form').addEventListener('submit', function(e) {
+    // RSVP form — envoie au backend /api/rsvp
+    document.getElementById('rsvp-form').addEventListener('submit', async function(e) {
       e.preventDefault();
-      this.querySelectorAll('input,select,textarea,button').forEach(el => el.disabled = true);
-      document.getElementById('form-success').style.display = 'block';
+      const btn = this.querySelector('button');
+      const successBox = document.getElementById('form-success');
+      const errorBox = document.getElementById('form-error');
+
+      btn.disabled = true;
+      btn.textContent = 'Envoi en cours…';
+      errorBox.style.display = 'none';
+
+      const data = Object.fromEntries(new FormData(this).entries());
+
+      try {
+        const res = await fetch('/api/rsvp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+        if (!res.ok) throw new Error('Erreur serveur');
+        this.querySelectorAll('input,select,textarea,button').forEach(el => el.disabled = true);
+        successBox.style.display = 'block';
+      } catch (err) {
+        btn.disabled = false;
+        btn.textContent = 'Confirmer ma présence';
+        errorBox.style.display = 'block';
+      }
     });
   </script>
 </body>
